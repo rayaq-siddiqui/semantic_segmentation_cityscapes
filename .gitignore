@@ -3,3 +3,6 @@ __pycache__/
 data/__pycache__/
 learning/
 attempt/
+.DS_Store
+data/.DS_Store/
+data/cityscapes/.DS_Store/
