@@ -34,8 +34,6 @@ val_data = CityScapesDataset(km = km,
                 img_dir='data/cityscapes/val')
 val_loader = DataLoader(val_data, batch_size=8, shuffle=True)
 
-# for i, batch in enumerate(train_loader):
-#     print(i)
 
 num_epochs = 1
 for epoch in range(num_epochs):  # loop over the dataset multiple times
@@ -45,8 +43,6 @@ for epoch in range(num_epochs):  # loop over the dataset multiple times
     total_images = 0
     total_val_loss = 0
     running_loss = 0.0
-
-    CheckAccuracy(val_loader, net, 15)
 
     net.train()
     for i, (img, seg) in (pbar := tqdm(enumerate(train_loader))):
@@ -62,16 +58,6 @@ for epoch in range(num_epochs):  # loop over the dataset multiple times
         loss.backward()
         optimizer.step()
 
-        # # Obtaining predictions from max value
-        # _, predicted = torch.max(outputs.detach(), 1)
-        # total_images+= seg.size(0)
-
-        # # Calculate the number of correct answers
-        # correct = (predicted == seg).sum().item()
-
-        # total_correct+=correct
-        # total_loss+=loss.item()
-
         # print statistics
         running_loss += loss.item()
         if i % 2 == 0:    # print every 2000 mini-batches
@@ -80,6 +66,6 @@ for epoch in range(num_epochs):  # loop over the dataset multiple times
             pbar.set_description(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2:.3f}')
             running_loss = 0.0
 
-    CheckAccuracy(val_loader, net, 15)
+    # CheckAccuracy(val_loader, net, 15)
 
 print('Finished Training')

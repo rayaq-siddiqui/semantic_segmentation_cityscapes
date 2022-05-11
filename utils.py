@@ -60,8 +60,18 @@ def CheckAccuracy(loader, model, numLabels):
             x = x.permute(0, 3, 1, 2).float()
             y = y.permute(0, 3, 1, 2).float()
 
-            preds = torch.sigmoid(model(x))
-            preds = (preds > 0.5).float()
+            preds = model(x)
+            preds = preds.permute(0, 2, 3, 1).float()
+            print('pre', preds.shape)
+            preds = np.argmax(preds, axis=3)
+            
+            # optimize this method in the future
+            tmp = np.zeros((preds.shape[0], preds.shape[1], preds.shape[2], 15))
+            tmp[np.arange(preds.size),preds[:]] = 1
+            preds = tmp
+
+            preds = preds.permute(0, 3, 1, 2).float()
+
             num_correct += (preds == y).sum()
             num_pixels += torch.numel(preds)
             dice_coeff = DiceCoefMulti(y, preds, numLabels)
@@ -76,7 +86,7 @@ def CheckAccuracy(loader, model, numLabels):
 def DiceCoef(y_true, y_pred):
     y_true_f = y_true.flatten()
     y_pred_f = y_pred.flatten()
-    intersection = np.sum(y_true_f * y_pred_f)
+    intersection = np.sum(y_true_f * y_pred_f, axis=0)
     smooth = 0.0001
     return (2. * intersection + smooth) / (np.sum(y_true_f) + np.sum(y_pred_f) + smooth)
 
