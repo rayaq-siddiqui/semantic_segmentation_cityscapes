@@ -13,7 +13,7 @@ from torch.utils.data import DataLoader
 
 from net import UNet
 from utils import LoadImage, CreateKMeans, CheckAccuracy
-from loss_function import total_loss_fn
+from losses import total_loss_fn
 
 # Initializaing UNet architecture and clustering
 net = UNet(3, 15).float() # Using float precision
